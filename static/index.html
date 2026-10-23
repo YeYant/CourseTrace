@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CourseTrace · 课程资料溯源</title><link rel="stylesheet" href="/style.css"></head>
+<body>
+<header class="app-header">
+  <a class="brand" href="/" aria-label="CourseTrace 首页"><span class="brand-mark" aria-hidden="true">C<span>↗</span></span><span>CourseTrace<small>课程资料溯源</small></span></a>
+  <div class="header-note"><span class="status-dot"></span>资料留在本机</div>
+  <button id="import-open" class="primary">＋ 导入 PDF</button>
+</header>
+<div class="workspace">
+  <aside class="library-panel" aria-label="资料库">
+    <div class="section-heading"><h2>我的资料</h2><span id="doc-count" class="count">0</span></div>
+    <button id="all-docs" class="library-all active">全部资料<span>查看与检索</span></button>
+    <div id="documents" class="document-list"></div>
+    <div class="library-footer"><button id="check-updates" class="text-button">↻ 检查文件更新</button><p>路径导入跟踪原文件。<br>上传导入保存本地副本。</p><button id="demo-load" class="text-button">打开示例资料</button></div>
+  </aside>
+  <main class="search-panel">
+    <div class="intro"><p class="section-label">学习，有据可查。</p><h1>从一个概念，<br>回到它的原页。</h1><p>检索课件与教材，让每一条引用都有出处。</p></div>
+    <form id="search-form" role="search"><label class="sr-only" for="query">检索概念或原文</label><div class="search-box"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 5 5" stroke="currentColor" stroke-width="1.8"/></svg><input id="query" placeholder="搜索概念或原文，例如：非理想溶液" maxlength="200" autocomplete="off" required><button class="primary" type="submit">检索</button></div></form>
+    <div class="search-options"><label for="category">来源类型</label><select id="category"><option value="">全部类型</option><option>教师课件</option><option>教材</option><option>补充资料</option></select><span>原文匹配 · 保留否定词</span></div>
+    <div id="notice" class="notice" hidden role="status"></div>
+    <div class="results-heading"><h2 id="results-title">资料中的每一页，都有来处</h2><span id="result-count"></span></div>
+    <section id="results" aria-label="检索结果" aria-live="polite"><div class="empty"><div class="empty-pages" aria-hidden="true"><span></span><span></span><span>文献<br>与原页</span></div><h3>从你的第一份资料开始</h3><p>导入 PDF，或打开原创示例资料。<br>检索结果会直接连接到这里的原始页面。</p><button id="empty-demo" class="secondary">试用示例资料</button></div></section>
+    <div class="search-footnote">当前使用文本检索，不生成 AI 答案。扫描页、公式和图表请查看原页。</div>
+  </main>
+  <aside class="reader-panel" aria-label="原页与出处">
+    <div class="reader-heading"><h2>原页核对</h2><span class="subtle">PDF 页面</span></div>
+    <div id="reader-empty" class="reader-empty"><svg width="62" height="72" viewBox="0 0 62 72" fill="none" aria-hidden="true"><rect x="9" y="3" width="44" height="61" rx="4" stroke="currentColor" stroke-width="1.4"/><path d="M18 22h25M18 30h25M18 38h17M18 49h25" stroke="currentColor" stroke-width="1.4"/><circle cx="47" cy="56" r="12" fill="#E8EEF8" stroke="currentColor"/><path d="m42 56 3 3 7-7" stroke="currentColor" stroke-width="1.4"/></svg><h3>让出处和内容一起出现</h3><p>点击资料或检索结果，<br>查看原页、页码与可导出的引用。</p></div>
+    <div id="reader" hidden>
+      <div class="source-title"><span id="source-category" class="badge"></span><h3 id="source-title"></h3></div>
+      <div class="page-controls"><button id="prev-page" class="icon-button" aria-label="上一页">‹</button><label for="page-number">PDF 第</label><input id="page-number" type="number" min="1" aria-label="PDF 页码"><span id="page-total"></span><button id="next-page" class="icon-button" aria-label="下一页">›</button></div>
+      <div id="page-error" class="notice" hidden role="alert"></div>
+      <div class="paper-stage"><img id="page-image" alt="PDF 原始页面"></div>
+      <div class="citation-selection"><label for="citation-selection">本次引用</label><select id="citation-selection"><option value="">仅记录本页出处</option></select><p id="citation-hint">未选择正文片段。</p><pre id="citation-preview"></pre></div>
+      <div class="reader-actions"><button id="copy-citation" class="primary">复制引用</button><button id="export-md" class="secondary">导出 Markdown</button><button id="export-json" class="text-button">JSON</button></div>
+      <p class="page-note">按 PDF 文件顺序计页，印刷页码尚未核对。</p>
+      <details class="evidence-details"><summary>选择原文片段与查看版本记录</summary><p id="version-meta"></p><label for="page-text">本页提取文本（可选中一段文字）</label><textarea id="page-text" readonly rows="10"></textarea><button id="use-selection" class="secondary">引用选中的文字</button></details>
+    </div>
+  </aside>
+</div>
+<dialog id="import-dialog" aria-labelledby="import-title"><form id="import-form"><div class="dialog-heading"><h2 id="import-title">导入一份学习资料</h2><button id="import-close" type="button" class="icon-button" aria-label="关闭">×</button></div><p>选择导入方式，资料不会上传到外部服务器。</p><fieldset class="import-method"><legend class="sr-only">导入方式</legend><label><input type="radio" name="method" value="upload" checked>上传 PDF 副本</label><label><input type="radio" name="method" value="path">跟踪本地原文件</label></fieldset><div id="upload-group" class="file-drop"><label for="pdf-file">选择 PDF 文件</label><input id="pdf-file" type="file" accept=".pdf,application/pdf"><small>最大 50 MB；扫描版暂不支持 OCR。</small></div><div id="path-group" hidden><label for="local-path">PDF 完整路径</label><input id="local-path" placeholder="D:\课程资料\第一章.pdf"><small>可以从资源管理器复制文件路径。修改原文件后可检查更新。</small></div><label for="import-name">资料名称 <span class="subtle">（可选）</span></label><input id="import-name" maxlength="180" placeholder="默认使用文件名"><label for="import-category">来源类型</label><select id="import-category"><option>教师课件</option><option>教材</option><option>补充资料</option></select><p id="import-error" class="form-error" role="alert"></p><button id="import-submit" class="primary wide" type="submit">导入并建立索引</button></form></dialog>
+<input type="file" id="replace-file" accept=".pdf,application/pdf" hidden>
+<dialog id="task-dialog" aria-labelledby="task-title"><h2 id="task-title">正在处理资料</h2><p id="task-status" role="status">正在传送至本机服务…</p><progress id="task-progress" max="1"></progress><p>处理期间可以取消；开始提交后会完成保存。</p><button id="task-cancel" class="secondary" disabled>取消操作</button></dialog>
+<div id="toast" class="toast" role="status" hidden></div>
+<script src="/app.js"></script>
+</body></html>
