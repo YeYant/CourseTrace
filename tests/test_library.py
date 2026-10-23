@@ -26,7 +26,8 @@ def pdf_bytes(pages):
 class LibraryTests(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory()
-        self.root=Path(self.temp.name)
+        # Windows runners may expose TEMP through an 8.3 short-path alias.
+        self.root=Path(self.temp.name).resolve()
         self.lib=Library(self.root/'data')
         self.source=self.root/'中文资料.pdf'
         self.source.write_bytes(pdf_bytes(['理想溶液 reversible','非理想溶液 Non-ideal solution','不可逆过程 irreversible','']))

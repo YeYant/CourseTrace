@@ -31,7 +31,8 @@ def make_pdf(text):
 class ReleaseLibraryTests(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory()
-        self.root=Path(self.temp.name)
+        # Compare canonical paths, including Windows 8.3 TEMP aliases.
+        self.root=Path(self.temp.name).resolve()
         self.lib=Library(self.root/'project'/'data')
 
     def tearDown(self):
